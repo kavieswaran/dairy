@@ -7,6 +7,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 
 app = Flask(__name__)
+ init_db()
 app.secret_key = 'kavisDairyMilkSecret2026!'
 DATABASE = 'dairy.db'
 
@@ -433,5 +434,5 @@ def export_excel():
 # ── Run ───────────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True, port=8080)
+

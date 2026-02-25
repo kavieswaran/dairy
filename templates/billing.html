@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}Tax Invoice – Order #{{ order.id }} | Kavi's Dairy{% endblock %}
+
+{% block head %}
+<style>
+    @media print {
+
+        .navbar,
+        .footer,
+        .no-print {
+            display: none !important;
+        }
+
+        body {
+            background: white;
+        }
+
+        .bill-wrapper {
+            box-shadow: none;
+            margin: 0;
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bill-page">
+    <div class="bill-wrapper">
+
+        <!-- Header -->
+        <div class="bill-header">
+            <div class="bill-brand">
+                <span style="font-size:3rem;">🥛</span>
+                <div>
+                    <h1>Kavi's Dairy Milk Products</h1>
+                    <p>23, Milk Colony Road, Peelamedu, Coimbatore – 641004</p>
+                    <p>📞 +91 98765 43210 | ✉️ info@kavisdairy.com</p>
+                    <p>GSTIN: 33XXXXX0000X1ZX | FSSAI: 12345678901234</p>
+                </div>
+            </div>
+            <div class="bill-label">
+                <span>TAX INVOICE</span>
+            </div>
+        </div>
+
+        <!-- Order Meta -->
+        <div class="bill-meta">
+            <div class="meta-group">
+                <h4>Bill To:</h4>
+                <p><strong>{{ order['name'] }}</strong></p>
+                <p>Username: {{ order['username'] }}</p>
+                {% if order['phone'] %}<p>📞 {{ order['phone'] }}</p>{% endif %}
+                {% if order['email'] %}<p>✉️ {{ order['email'] }}</p>{% endif %}
+                {% if order['address'] %}<p>📍 {{ order['address'] }}</p>{% endif %}
+            </div>
+            <div class="meta-group text-right">
+                <p><strong>Invoice No:</strong> KD-{{ '%05d' % order.id }}</p>
+                <p><strong>Order ID:</strong> #{{ order.id }}</p>
+                <p><strong>Date:</strong> {{ order['created_at'][:10] }}</p>
+                <p><strong>Time:</strong> {{ order['created_at'][11:16] }}</p>
+                <p><strong>Status:</strong> <span class="status-badge">✅ {{ order['status'] }}</span></p>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <table class="bill-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Unit</th>
+                    <th>Rate (₹)</th>
+                    <th>Qty</th>
+                    <th>Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item['product_name'] }}</td>
+                    <td>—</td>
+                    <td>{{ "%.2f"|format(item['price']) }}</td>
+                    <td>{{ item['quantity'] }}</td>
+                    <td><strong>{{ "%.2f"|format(item['price'] * item['quantity']) }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="bill-totals">
+            <div class="totals-box">
+                <div class="total-row"><span>Subtotal</span><span>₹{{ "%.2f"|format(subtotal) }}</span></div>
+                <div class="total-row"><span>GST @ 5%</span><span>₹{{ "%.2f"|format(gst) }}</span></div>
+                <div class="total-row delivery-row"><span>Delivery Charges</span><span class="free">FREE</span></div>
+                <div class="total-row grand-total"><span>Grand Total</span><strong>₹{{ "%.2f"|format(order['total'])
+                        }}</strong></div>
+            </div>
+        </div>
+
+        <!-- Amount in words -->
+        <div class="bill-words">
+            <strong>Amount in Words:</strong> Rupees {{ order['total']|int }} Only
+        </div>
+
+        <!-- Footer -->
+        <div class="bill-footer">
+            <div>
+                <p><strong>Terms & Conditions:</strong></p>
+                <p>• All products are subject to availability.</p>
+                <p>• Returns accepted within 24 hours of delivery for quality issues.</p>
+                <p>• This is a computer-generated invoice and requires no signature.</p>
+            </div>
+            <div class="bill-sign">
+                <div class="sign-box">🥛</div>
+                <p><strong>Kavi's Dairy Milk Products</strong></p>
+                <p>Authorized Signatory</p>
+            </div>
+        </div>
+
+        <!-- Thank you -->
+        <div class="bill-thanks">
+            🐄 <strong>Thank you for choosing Kavi's Dairy!</strong> 🐄<br>
+            <small>Pure • Fresh • Organic — Delivered to Your Doorstep</small>
+        </div>
+
+        <!-- Print Controls -->
+        <div class="no-print print-actions">
+            <button onclick="window.print()" class="btn btn-primary btn-lg">🖨️ Print Bill</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline btn-lg">← My Orders</a>
+            <a href="{{ url_for('shop') }}" class="btn btn-outline btn-lg">🛒 Shop Again</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

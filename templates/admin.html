@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card admin-card">
+        <div class="auth-icon">🔐</div>
+        <h2 class="auth-title">Admin Portal</h2>
+        <p class="auth-sub">Restricted access — Authorized personnel only</p>
+
+        <form method="POST" action="{{ url_for('admin_login') }}" class="auth-form">
+            <div class="form-group">
+                <label for="username">Admin Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter admin username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Admin Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter admin password" required>
+            </div>
+            <button type="submit" class="btn btn-danger btn-block">Admin Login</button>
+        </form>
+
+        <div class="auth-footer">
+            <p><a href="{{ url_for('login') }}">← Back to User Login</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

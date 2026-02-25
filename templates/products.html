@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Our Products – Kavi's Dairy Milk Products{% endblock %}
+
+{% block content %}
+
+<section class="page-hero" style="background:linear-gradient(135deg,#1a3a1a 0%,#2b6e23 100%);">
+    <h1>Our Dairy Products</h1>
+    <p>Fresh, organic, and delivered straight from the farm</p>
+</section>
+
+<!-- Category Filter -->
+<div class="cat-filter-bar">
+    <a href="{{ url_for('products', category='All') }}" class="cat-btn {{ 'active' if active_cat=='All' }}">All</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('products', category=cat) }}" class="cat-btn {{ 'active' if active_cat==cat }}">{{ cat }}</a>
+    {% endfor %}
+</div>
+
+<!-- Product Grid -->
+<section class="home-section">
+    <div class="products-grid">
+        {% for p in products %}
+        <div class="product-card">
+            <div class="prod-emoji-wrap">{{ p.emoji }}</div>
+            <div class="prod-body">
+                <span class="cat-tag">{{ p.category }}</span>
+                <h3>{{ p.name }}</h3>
+                <p>{{ p.description }}</p>
+                <div class="stock-bar">
+                    <span class="{{ 'in-stock' if p.stock>10 else 'low-stock' }}">
+                        {{ '✅ In Stock' if p.stock>10 else ('⚠️ Only '+p.stock|string+' left') }}
+                    </span>
+                </div>
+                <div class="prod-foot">
+                    <span class="price">₹{{ "%.0f"|format(p.price) }}<small>/{{ p.unit }}</small></span>
+                    {% if session.user_id %}
+                    <button class="btn btn-primary btn-sm add-cart-btn" data-id="{{ p.id }}" data-name="{{ p.name }}">+
+                        Add to Cart</button>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-sm">Login to Buy</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.add-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const pid = this.dataset.id;
+            const fd = new FormData();
+            fd.append('product_id', pid);
+            fd.append('qty', 1);
+            fetch('/cart/add', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('cartBadge').textContent = data.cart_count;
+                        const orig = this.textContent;
+                        this.textContent = '✓ Added!';
+                        this.style.background = '#1f7338';
+                        setTimeout(() => { this.textContent = orig; this.style.background = ''; }, 2000);
+                    } else {
+                        window.location = '/login';
+                    }
+                });
+        });
+    });
+</script>
+{% endblock %}

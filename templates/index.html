@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block title %}Home – Kavi's Dairy Milk Products{% endblock %}
+
+{% block content %}
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="pill-badge">🌿 100% Organic &amp; Fresh</span>
+        <h1>Nature's Goodness<br><em class="yellow">Delivered Fresh</em></h1>
+        <p>Experience pure, unadulterated dairy straight from our cows grazing on lush green pastures — farm to table in
+            24 hours.</p>
+        <div class="hero-btns">
+            <a href="{{ url_for('shop') }}" class="btn btn-primary btn-lg">Shop Now →</a>
+            <a href="{{ url_for('about') }}" class="btn btn-white-out btn-lg">Our Story</a>
+        </div>
+        <div class="hero-stats">
+            <div><strong>25+</strong><span>Years</span></div>
+            <div><strong>10K+</strong><span>Families</span></div>
+            <div><strong>500+</strong><span>Cows</span></div>
+            <div><strong>14+</strong><span>Products</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ── WHY US strip ───────────────────────────────────────────────────────── -->
+<section class="strip">
+    <div class="strip-item"><span>🌾</span>
+        <div><strong>Farm Fresh</strong>
+            <p>Delivered within 24 hrs</p>
+        </div>
+    </div>
+    <div class="strip-item"><span>🌿</span>
+        <div><strong>100% Organic</strong>
+            <p>No preservatives</p>
+        </div>
+    </div>
+    <div class="strip-item"><span>🐄</span>
+        <div><strong>Happy Cows</strong>
+            <p>Free-range, grass-fed</p>
+        </div>
+    </div>
+    <div class="strip-item"><span>🚚</span>
+        <div><strong>Free Delivery</strong>
+            <p>On orders above ₹299</p>
+        </div>
+    </div>
+    <div class="strip-item"><span>✅</span>
+        <div><strong>FSSAI Certified</strong>
+            <p>Quality guaranteed</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── FEATURED PRODUCTS ─────────────────────────────────────────────────── -->
+<section class="home-section">
+    <div class="section-head">
+        <h2>Our Fresh Products</h2>
+        <p>Handpicked from the farm every morning</p>
+    </div>
+    <div class="products-grid">
+        {% for p in products %}
+        <div class="product-card" data-id="{{ p.id }}">
+            <div class="prod-emoji-wrap">{{ p.emoji }}</div>
+            <div class="prod-body">
+                <span class="cat-tag">{{ p.category }}</span>
+                <h3>{{ p.name }}</h3>
+                <p>{{ p.description }}</p>
+                <div class="prod-foot">
+                    <span class="price">₹{{ "%.0f"|format(p.price) }}<small>/{{ p.unit }}</small></span>
+                    {% if session.user_id %}
+                    <button class="btn btn-primary btn-sm add-cart-btn" data-id="{{ p.id }}" data-name="{{ p.name }}">+
+                        Add</button>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-sm">Login to Buy</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align:center;margin-top:36px;">
+        <a href="{{ url_for('products') }}" class="btn btn-outline btn-lg">View All Products →</a>
+    </div>
+</section>
+
+<!-- ── ABOUT TEASER ──────────────────────────────────────────────────────── -->
+<section class="about-teaser">
+    <div class="about-teaser-inner">
+        <div class="at-text">
+            <span class="pill-badge" style="background:rgba(255,255,255,0.2);color:#fff;">🐄 Since 1998</span>
+            <h2>From Our Farm to<br>Your Family's Table</h2>
+            <p>For over two decades, Kavi's Dairy has been Tamil Nadu's most trusted source of pure, organic dairy.
+                Every drop of milk you taste carries with it the love and care of our dedicated farming family.</p>
+            <a href="{{ url_for('about') }}" class="btn btn-white-out" style="margin-top:24px;">Read Our Story →</a>
+        </div>
+        <div class="at-stats-grid">
+            <div class="at-stat">🌾<strong>100%</strong><span>Grass-fed</span></div>
+            <div class="at-stat">🧪<strong>Zero</strong><span>Additives</span></div>
+            <div class="at-stat">🏆<strong>FSSAI</strong><span>Certified</span></div>
+            <div class="at-stat">❄️<strong>Cold</strong><span>Chain Delivery</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIALS ──────────────────────────────────────────────────────── -->
+<section class="home-section" style="background:#f9fbf9;">
+    <div class="section-head">
+        <h2>What Our Customers Say</h2>
+        <p>Real reviews from happy families</p>
+    </div>
+    <div class="testimonials-grid">
+        <div class="testi-card">"The ghee is absolutely divine! You can taste the difference from store brands
+            immediately." <strong>— Priya R., Coimbatore</strong></div>
+        <div class="testi-card">"Fresh delivery every morning. The paneer is always soft and fresh. Highly recommend!"
+            <strong>— Suresh K., Chennai</strong></div>
+        <div class="testi-card">"My kids love the Mango Lassi. No artificial flavors — just pure goodness!" <strong>—
+                Anita M., Bangalore</strong></div>
+    </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────────────────────────── -->
+<section class="cta-banner">
+    <h2>Ready to taste the difference?</h2>
+    <p>Join 10,000+ families enjoying pure farm-fresh dairy every day.</p>
+    {% if session.user_id %}
+    <a href="{{ url_for('shop') }}" class="btn btn-cta">Shop Now →</a>
+    {% else %}
+    <a href="{{ url_for('register') }}" class="btn btn-cta">Get Started – It's Free</a>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.add-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const pid = this.dataset.id;
+            const fd = new FormData();
+            fd.append('product_id', pid);
+            fd.append('qty', 1);
+            fetch('/cart/add', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('cartBadge').textContent = data.cart_count;
+                        this.textContent = '✓ Added';
+                        this.style.background = '#1f7338';
+                        setTimeout(() => { this.textContent = '+ Add'; this.style.background = ''; }, 1500);
+                    } else {
+                        window.location = '/login';
+                    }
+                });
+        });
+    });
+</script>
+{% endblock %}

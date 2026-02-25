@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Login – Kavi's Dairy{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <div class="auth-icon">🥛</div>
+        <h2 class="auth-title">Welcome Back</h2>
+        <p class="auth-sub">Login to your Kavi's Dairy account</p>
+
+        <form method="POST" action="{{ url_for('login') }}" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login →</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+            <p>Admin access? <a href="{{ url_for('admin_login') }}">Admin Login</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}
